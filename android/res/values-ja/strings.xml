@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) 2010 ZXing authors
+ Copyright 2011 Robert Theis
+ Copyright 2014 Zhaoqiang Wang
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<resources>
+    <string name="app_name">Tinymid</string>
+    
+    <string name="error_title">エラー</string>
+    <string name="error_camera_init">カメラを初期化できませんでした。デバイスを再起動してみてください.</string>
+    <string name="error_ext_storage_unavailable">必要な外部ストレージ（SDカードなど）が使用できない.</string>
+    <string name="error_ext_storage_readonly">必要な外部ストレージ（SDカードなど）が使用できない.</string>
+    <string name="error_network">ネットワークを使うことはできませんので、言語データをダウンロードすることはできません。ネットワークアクセスを有効にして、このアプリを再起動してください.</string>
+    
+    
+    <string name="engine_wait">少々お待ちください</string>    
+    <string name="engine_init_check_data">データのインストールを確認...</string>
+    <string name="engine_init_download_pre">データをダウンロードしています...</string>
+    <string name="engine_init_unpress_pre">データを圧縮解除しています...</string>
+    <string name="engine_init_prefix">起動中...</string>
+    <string name="engine_processing">文字を認識中 ...</string>
+    
+    <string name="ocr_failed">認識失敗しました。もう一度試してください</string>
+    
+    <!-- copy and share -->
+    <string name="copy_recognized_text">認識された文字をコピーします</string>
+    <string name="share_recognized_text">認識された文字をシェアーします</string>
+    <string name="copy_translated_text">訳文をコピーします</string>
+    <string name="share_translated_text">訳文をシェアーします</string>
+    <string name="copy_text_status">テキストをクリップボードにコピーしました.</string>
+    
+    <!-- current language status -->
+    <string name="lang_prefix">文字認識: </string>
+    
+    <!--  -->
+    <string name="ocr_result_lang_prefix">文字認識</string>
+    <string name="translation">訳文</string>
+    
+    <!-- menu -->
+    <string name="settings">設定</string>
+    <string name="about">製品情報</string>
+    
+    <!-- button -->
+    <string name="done">確定</string>
+    
+</resources>

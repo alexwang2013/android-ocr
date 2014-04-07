@@ -2,6 +2,7 @@
 <!--
  Copyright (C) 2008 ZXing authors
  Copyright 2011 Robert Theis
+ Copyright 2014 Zhaoqiang Wang
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -69,7 +70,7 @@
           <TextView android:id="@+id/source_language_text_view_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="OCR"
+                    android:text="@string/ocr_result_lang_prefix"
                     android:textColor="@color/result_minor_text"
                     android:textStyle="bold"
                     android:textSize="14sp"
@@ -91,7 +92,7 @@
           <TextView android:id="@+id/translation_language_label_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Translation"
+                    android:text="@string/translation"
                     android:textColor="@color/translation_text"
                     android:textStyle="bold"
                     android:textSize="14sp"

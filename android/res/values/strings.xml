@@ -2,6 +2,7 @@
 <!--
  Copyright (C) 2010 ZXing authors
  Copyright 2011 Robert Theis
+ Copyright 2014 Zhaoqiang Wang
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,5 +17,42 @@
  limitations under the License.
  -->
 <resources>
-    <string name="app_name">OCR Test</string>
+    <string name="app_name">Tinymid</string>
+    
+    <string name="error_title">Error</string>
+    <string name="error_camera_init">Could not initialize camera. Please try restarting device.</string>
+    <string name="error_ext_storage_unavailable">Required external storage (such as an SD card) is unavailable.</string>
+    <string name="error_ext_storage_readonly">Required external storage (such as an SD card) is unavailable for data storage.</string>
+    <string name="error_network">Network is unreachable - cannot download language data. Please enable network access and restart this app.</string>
+    
+    
+    <string name="engine_wait">Please wait</string>
+    <string name="engine_init_check_data">Checking for data installation...</string>
+    <string name="engine_init_download_pre">Downloading data...</string>
+    <string name="engine_init_unpress_pre">Uncompressing data...</string>
+    <string name="engine_init_prefix">Initializing OCR engine...</string>
+    <string name="engine_processing">Performing OCR using ...</string>
+    
+    <string name="ocr_failed">OCR failed. Please try again.</string>
+    
+    <!-- copy and share -->
+    <string name="copy_recognized_text">Copy recognized text</string>
+    <string name="share_recognized_text">Share recognized text</string>
+    <string name="copy_translated_text">Copy translated text</string>
+    <string name="share_translated_text">Share translated text</string>
+    <string name="copy_text_status">Text copied.</string>
+    
+    <!-- current language status -->
+    <string name="lang_prefix">OCR: </string>
+    
+    <!--  -->
+    <string name="ocr_result_lang_prefix">OCR</string>
+    <string name="translation">Translation</string>
+    <!-- menu -->
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    
+    <!-- button -->
+    <string name="done">Done</string>
+    
 </resources>

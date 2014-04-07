@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008 ZXing authors
  * Copyright 2011 Robert Theis
+ * Copyright 2014 Zhaoqiang Wang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,10 +86,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   public static final String DEFAULT_SOURCE_LANGUAGE_CODE = "eng";
   
   /** ISO 639-1 language code indicating the default target language for translation. */
-  public static final String DEFAULT_TARGET_LANGUAGE_CODE = "es";
+  //public static final String DEFAULT_TARGET_LANGUAGE_CODE = "es";
+  public static final String DEFAULT_TARGET_LANGUAGE_CODE = "ja";//japanese
   
   /** The default online machine translation service to use. */
-  public static final String DEFAULT_TRANSLATOR = "Google Translate";
+  //public static final String DEFAULT_TRANSLATOR = "Google Translate";
+  public static final String DEFAULT_TRANSLATOR = "Tinymid Translate";
   
   /** The default OCR engine to use. */
   public static final String DEFAULT_OCR_ENGINE_MODE = "Tesseract";
@@ -100,13 +103,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   public static final boolean DEFAULT_TOGGLE_AUTO_FOCUS = true;
   
   /** Whether to initially disable continuous-picture and continuous-video focus modes. */
-  public static final boolean DEFAULT_DISABLE_CONTINUOUS_FOCUS = true;
+  public static final boolean DEFAULT_DISABLE_CONTINUOUS_FOCUS = false;
   
   /** Whether to beep by default when the shutter button is pressed. */
   public static final boolean DEFAULT_TOGGLE_BEEP = false;
   
   /** Whether to initially show a looping, real-time OCR display. */
-  public static final boolean DEFAULT_TOGGLE_CONTINUOUS = false;
+  public static final boolean DEFAULT_TOGGLE_CONTINUOUS = true;
   
   /** Whether to initially reverse the image returned by the camera. */
   public static final boolean DEFAULT_TOGGLE_REVERSED_IMAGE = false;
@@ -122,7 +125,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   private static final boolean CONTINUOUS_DISPLAY_RECOGNIZED_TEXT = true;
   
   /** Flag to display recognition-related statistics on the scanning screen. */
-  private static final boolean CONTINUOUS_DISPLAY_METADATA = true;
+  private static final boolean CONTINUOUS_DISPLAY_METADATA = false;
   
   /** Flag to enable display of the on-screen shutter button. */
   private static final boolean DISPLAY_SHUTTER_BUTTON = true;
@@ -411,7 +414,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     if (lastResult != null) {
       handleOcrDecode(lastResult);
     } else {
-      Toast toast = Toast.makeText(this, "OCR failed. Please try again.", Toast.LENGTH_SHORT);
+      Toast toast = Toast.makeText(this, R.string.ocr_failed, Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.TOP, 0, 0);
       toast.show();
       resumeContinuousDecoding();
@@ -462,11 +465,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       handler = new CaptureActivityHandler(this, cameraManager, isContinuousModeActive);
       
     } catch (IOException ioe) {
-      showErrorMessage("Error", "Could not initialize camera. Please try restarting device.");
+      showErrorMessage(R.string.error_title, R.string.error_camera_init);
     } catch (RuntimeException e) {
       // Barcode Scanner has seen crashes in the wild of this variety:
       // java.?lang.?RuntimeException: Fail to connect to camera service
-      showErrorMessage("Error", "Could not initialize camera. Please try restarting device.");
+      showErrorMessage(R.string.error_title, R.string.error_camera_init);
     }   
   }
   
@@ -547,8 +550,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     //    MenuInflater inflater = getMenuInflater();
     //    inflater.inflate(R.menu.options_menu, menu);
     super.onCreateOptionsMenu(menu);
-    menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(android.R.drawable.ic_menu_preferences);
-    menu.add(0, ABOUT_ID, 0, "About").setIcon(android.R.drawable.ic_menu_info_details);
+    menu.add(0, SETTINGS_ID, 0, R.string.settings).setIcon(android.R.drawable.ic_menu_preferences);
+    menu.add(0, ABOUT_ID, 0, R.string.about).setIcon(android.R.drawable.ic_menu_info_details);
     return true;
   }
 
@@ -602,7 +605,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       state = Environment.getExternalStorageState();
     } catch (RuntimeException e) {
       Log.e(TAG, "Is the SD card visible?", e);
-      showErrorMessage("Error", "Required external storage (such as an SD card) is unavailable.");
+      showErrorMessage(R.string.error_title, R.string.error_ext_storage_unavailable);
     }
     
     if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
@@ -616,7 +619,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       } catch (NullPointerException e) {
         // We get an error here if the SD card is visible, but full
         Log.e(TAG, "External storage is unavailable");
-        showErrorMessage("Error", "Required external storage (such as an SD card) is full or unavailable.");
+        showErrorMessage(R.string.error_title, R.string.error_ext_storage_unavailable);
       }
       
       //        } else {
@@ -630,12 +633,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
     	// We can only read the media
     	Log.e(TAG, "External storage is read-only");
-      showErrorMessage("Error", "Required external storage (such as an SD card) is unavailable for data storage.");
+      showErrorMessage(R.string.error_title, R.string.error_ext_storage_readonly);
     } else {
     	// Something else is wrong. It may be one of many other states, but all we need
       // to know is we can neither read nor write
     	Log.e(TAG, "External storage is unavailable");
-    	showErrorMessage("Error", "Required external storage (such as an SD card) is unavailable or corrupted.");
+    	showErrorMessage(R.string.error_title, R.string.error_ext_storage_unavailable);
     }
     return null;
   }
@@ -684,13 +687,16 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     
     // Display the name of the OCR engine we're initializing in the indeterminate progress dialog box
     indeterminateDialog = new ProgressDialog(this);
-    indeterminateDialog.setTitle("Please wait");
+    indeterminateDialog.setTitle(R.string.engine_wait);
     String ocrEngineModeName = getOcrEngineModeName();
-    if (ocrEngineModeName.equals("Both")) {
-      indeterminateDialog.setMessage("Initializing Cube and Tesseract OCR engines for " + languageName + "...");
+    String initial_text=getString(R.string.engine_init_prefix);
+    indeterminateDialog.setMessage(initial_text);
+/*    if (ocrEngineModeName.equals("Both")) {
+    	String initial_text=getString(R.string.init_engine_prefix);
+      indeterminateDialog.setMessage(initial_text + languageName + "...");
     } else {
       indeterminateDialog.setMessage("Initializing " + ocrEngineModeName + " OCR engine for " + languageName + "...");
-    }
+    }*/
     indeterminateDialog.setCancelable(false);
     indeterminateDialog.show();
     
@@ -724,7 +730,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     
     // Test whether the result is null
     if (ocrResult.getText() == null || ocrResult.getText().equals("")) {
-      Toast toast = Toast.makeText(this, "OCR failed. Please try again.", Toast.LENGTH_SHORT);
+      Toast toast = Toast.makeText(this, R.string.ocr_failed, Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.TOP, 0, 0);
       toast.show();
       return false;
@@ -882,11 +888,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
     if (v.equals(ocrResultView)) {
-      menu.add(Menu.NONE, OPTIONS_COPY_RECOGNIZED_TEXT_ID, Menu.NONE, "Copy recognized text");
-      menu.add(Menu.NONE, OPTIONS_SHARE_RECOGNIZED_TEXT_ID, Menu.NONE, "Share recognized text");
+      menu.add(Menu.NONE, OPTIONS_COPY_RECOGNIZED_TEXT_ID, Menu.NONE, R.string.copy_recognized_text);
+      menu.add(Menu.NONE, OPTIONS_SHARE_RECOGNIZED_TEXT_ID, Menu.NONE, R.string.share_recognized_text);
     } else if (v.equals(translationView)){
-      menu.add(Menu.NONE, OPTIONS_COPY_TRANSLATED_TEXT_ID, Menu.NONE, "Copy translated text");
-      menu.add(Menu.NONE, OPTIONS_SHARE_TRANSLATED_TEXT_ID, Menu.NONE, "Share translated text");
+      menu.add(Menu.NONE, OPTIONS_COPY_TRANSLATED_TEXT_ID, Menu.NONE, R.string.copy_translated_text);
+      menu.add(Menu.NONE, OPTIONS_SHARE_TRANSLATED_TEXT_ID, Menu.NONE, R.string.copy_translated_text);
     }
   }
 
@@ -898,7 +904,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     case OPTIONS_COPY_RECOGNIZED_TEXT_ID:
         clipboardManager.setText(ocrResultView.getText());
       if (clipboardManager.hasText()) {
-        Toast toast = Toast.makeText(this, "Text copied.", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(this, R.string.copy_text_status, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.BOTTOM, 0, 0);
         toast.show();
       }
@@ -912,7 +918,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     case OPTIONS_COPY_TRANSLATED_TEXT_ID:
         clipboardManager.setText(translationView.getText());
       if (clipboardManager.hasText()) {
-        Toast toast = Toast.makeText(this, "Text copied.", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(this, R.string.copy_text_status, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.BOTTOM, 0, 0);
         toast.show();
       }
@@ -955,7 +961,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   
   /** Displays a pop-up message showing the name of the current OCR source language. */
   void showLanguageName() {   
-    Toast toast = Toast.makeText(this, "OCR: " + sourceLanguageReadable, Toast.LENGTH_LONG);
+	String lang_prefix=getString(R.string.lang_prefix);
+    Toast toast = Toast.makeText(this, lang_prefix + sourceLanguageReadable, Toast.LENGTH_LONG);
     toast.setGravity(Gravity.TOP, 0, 0);
     toast.show();
   }
@@ -1041,7 +1048,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       } else {
         isFirstLaunch = false;
       }
-      if (currentVersion > lastVersion) {
+/*      if (currentVersion > lastVersion) {
         
         // Record the last version for which we last displayed the What's New (Help) page
         prefs.edit().putInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, currentVersion).commit();
@@ -1053,7 +1060,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, page);
         startActivity(intent);
         return true;
-      }
+      }*/
     } catch (PackageManager.NameNotFoundException e) {
       Log.w(TAG, e);
     }
@@ -1194,13 +1201,15 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   void displayProgressDialog() {
     // Set up the indeterminate progress dialog box
     indeterminateDialog = new ProgressDialog(this);
-    indeterminateDialog.setTitle("Please wait");        
+    indeterminateDialog.setTitle(R.string.engine_wait);        
     String ocrEngineModeName = getOcrEngineModeName();
-    if (ocrEngineModeName.equals("Both")) {
+/*    if (ocrEngineModeName.equals("Both")) {
       indeterminateDialog.setMessage("Performing OCR using Cube and Tesseract...");
     } else {
       indeterminateDialog.setMessage("Performing OCR using " + ocrEngineModeName + "...");
-    }
+    }*/
+    String engine_processing=getString(R.string.engine_processing);
+    indeterminateDialog.setMessage(engine_processing);
     indeterminateDialog.setCancelable(false);
     indeterminateDialog.show();
   }
@@ -1212,15 +1221,15 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   /**
    * Displays an error message dialog box to the user on the UI thread.
    * 
-   * @param title The title for the dialog box
+   * @param errorTitle The title for the dialog box
    * @param message The error message to be displayed
    */
-  void showErrorMessage(String title, String message) {
+  void showErrorMessage(int errorTitle, int message) {
 	  new AlertDialog.Builder(this)
-	    .setTitle(title)
+	    .setTitle(errorTitle)
 	    .setMessage(message)
 	    .setOnCancelListener(new FinishListener(this))
-	    .setPositiveButton( "Done", new FinishListener(this))
+	    .setPositiveButton( R.string.done, new FinishListener(this))
 	    .show();
   }
 }

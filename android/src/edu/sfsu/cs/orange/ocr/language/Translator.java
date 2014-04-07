@@ -54,6 +54,12 @@ public class Translator {
           LanguageCodeHelper.getTranslationLanguageName(activity.getBaseContext(), sourceLanguageCode));      
       
       return TranslatorGoogle.translate(sourceLanguageCode, targetLanguageCode, sourceText);
+    } else if(api.equals(PreferencesActivity.TRANSLATOR_TINYMID)){
+    	// Get the correct code for the source language for this translation service.
+        sourceLanguageCode = TranslatorGoogle.toLanguage(
+            LanguageCodeHelper.getTranslationLanguageName(activity.getBaseContext(), sourceLanguageCode));      
+        
+        return TranslatorTinymid.translate(sourceLanguageCode, targetLanguageCode, sourceText);
     }
     return BAD_TRANSLATION_MSG;
   }

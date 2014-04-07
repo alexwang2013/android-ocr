@@ -61,6 +61,7 @@ public class PreferencesActivity extends PreferenceActivity implements
 
   public static final String TRANSLATOR_BING = "Bing Translator";
   public static final String TRANSLATOR_GOOGLE = "Google Translate";
+  public static final String TRANSLATOR_TINYMID = "Tinymid Translate";
   
   private ListPreference listPreferenceSourceLanguage;
   private ListPreference listPreferenceTargetLanguage;  
